@@ -1,5 +1,7 @@
 #pragma once
 
+#include <exception>
+#include <ios>
 #include <iostream>
 #include <string>
 
@@ -24,17 +26,27 @@ struct Protocol {
       if (line.empty())
         break;
 
-      if (line.rfind("Content-Length: ", 0) == 0) {
-        content_length = std::stoull(line.substr(16));
-      }
+      if (line.starts_with("Content-Length: "))
+        try {
+          content_length = std::stoull(line.substr(16));
+        } catch (const std::exception &e) {
+          return false;
+        }
     }
 
     if (content_length == 0)
       return false;
 
-    std::vector<char> buffer(content_length);
-    std::cin.read(buffer.data(), content_length);
-    out_body.assign(buffer.begin(), buffer.end());
+    // std::vector<char> buffer(content_length);
+    // std::cin.read(buffer.data(), content_length);
+    // out_body.assign(buffer.begin(), buffer.end());
+
+    out_body.resize(content_length);
+    std::cin.read(out_body.data(), content_length);
+
+    if (std::cin.gcount() != static_cast<std::streamsize>(content_length))
+      return false;
+
     return true;
   }
 
