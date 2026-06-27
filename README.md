@@ -8,7 +8,7 @@
 
 ### To get started
 
-[!NOTICE] This program is useless if you don't use Mokai (the build engine)!
+![NOTICE] This program is useless if you don't use Mokai (the build engine)!
 
 ## Clone this repo, build with MOKAI
 
@@ -18,9 +18,7 @@
 
 # then
 
-### Run
-
-## `chmod +x ./mokai_lsp`
+### Run `chmod +x ./mokai_lsp`
 
 ## Add this snippet to your NeoVim config (most likely `~/.config/nvim/init.lua`)
 
