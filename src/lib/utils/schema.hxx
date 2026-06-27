@@ -46,6 +46,8 @@ inline std::vector<TableDef> get_schema() {
             false,
             "C++ standard version.",
             {"c++11", "c++14", "c++17", "c++20", "c++23", "c++26"}},
+           {"default_compiler", FieldType::String, false,
+            "Default selected compiler"},
            {"version_from", FieldType::Table, false,
             "Dynamic versioning rule: { file, pattern }."},
            {"authors", FieldType::Array, false, "List of author names."},
