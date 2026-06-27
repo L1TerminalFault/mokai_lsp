@@ -22,7 +22,7 @@
 
 ## Add this snippet to your NeoVim config (most likely `~/.config/nvim/init.lua`)
 
-# Don't forget to replace the `<current_dir>` placeholder with your `pwd`
+#### Don't forget to replace the `<current_dir>` placeholder with your `pwd`
 
 ```lua
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
