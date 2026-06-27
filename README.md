@@ -18,7 +18,11 @@
 
 # then
 
-### Run `chmod +x ./mokai_lsp`
+### Run
+
+```
+chmod +x ./mokai_lsp
+```
 
 ## Add this snippet to your NeoVim config (most likely `~/.config/nvim/init.lua`)
 
