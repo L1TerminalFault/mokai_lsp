@@ -8,7 +8,7 @@
 
 ### To get started
 
-![NOTICE] This program is useless if you don't use Mokai (the build engine)!
+**NOTICE** This program is useless if you don't use Mokai (the build engine)!
 
 ## Clone this repo, build with MOKAI
 
