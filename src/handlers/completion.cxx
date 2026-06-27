@@ -6,7 +6,7 @@
 using json = nlohmann::json;
 
 // -----------------------------------------------------------------------
-// Helpers
+// NOTE: Helpers
 // -----------------------------------------------------------------------
 
 // Figure out what table path the cursor is sitting in by scanning upward
@@ -46,7 +46,7 @@ static std::string get_table_context(const std::string &content,
   return current_table;
 }
 
-// Normalize a raw header like "target.my_engine_core" -> "target.*"
+// NOTE: Normalize a raw header like "target.my_engine_core" -> "target.*"
 // or "target.my_engine_core.sources_if" -> "target.*.sources_if"
 static std::string
 normalize_path(const std::string &raw,
@@ -76,7 +76,7 @@ normalize_path(const std::string &raw,
   return raw; // unknown, return as-is
 }
 
-// Get what the user has typed on the current line (partial key or value)
+// INFO: Get what the user has typed on the current line (partial key or value)
 static std::string get_current_line(const std::string &content,
                                     int cursor_line) {
   std::istringstream stream(content);
@@ -169,7 +169,7 @@ static json make_value_item(const std::string &val, int index) {
 }
 
 // -----------------------------------------------------------------------
-// Handler
+// NOTE: Handler
 // -----------------------------------------------------------------------
 
 void lsp::server::LspServer::handle_completion(const nlohmann::json &msg) {
