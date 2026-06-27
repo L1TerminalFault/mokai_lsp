@@ -1,0 +1,7 @@
+[project]
+name = "mokai_lsp"
+cpp_version = "c++23"
+
+[target.mokai_lsp]
+type = "executable"
+sources = ["src/**/*.cxx"]
