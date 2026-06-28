@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../parsers/json.hxx"
+#include "parsers/json.hxx"
 #include "utils/document.hxx"
 
 using json = nlohmann::json;

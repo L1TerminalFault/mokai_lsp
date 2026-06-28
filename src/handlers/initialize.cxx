@@ -1,8 +1,11 @@
-#include "../lib/server.hxx"
-#include "../lib/utils/protocol.hxx"
-#include "../parsers/json.hxx"
+#include "lib/server.hxx"
+#include "lib/utils/protocol.hxx"
+#include "parsers/json.hxx"
 
 using json = nlohmann::json;
+
+const json &triggerCharacters = {".", "=", "[", " ", "\"",
+                                 "'", "+", "@", "/", "_"};
 
 void lsp::server::LspServer::handle_initialize(const json &msg) {
   json response = {
@@ -14,7 +17,8 @@ void lsp::server::LspServer::handle_initialize(const json &msg) {
            {{"openClose", true}, {"change", 1}, {"save", true}}},
 
           {"completionProvider",
-           {{"resolveProvider", false}, {"triggerCharacters", {".", "="}}}},
+           {{"resolveProvider", false},
+            {"triggerCharacters", triggerCharacters}}},
 
           {"hoverProvider", true},
           {"definitionProvider", true},

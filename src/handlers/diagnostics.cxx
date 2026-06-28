@@ -1,8 +1,8 @@
-#include "../lib/server.hxx"
-#include "../lib/utils/protocol.hxx"
-#include "../lib/utils/schema.hxx"
-#include "../parsers/json.hxx"
-#include "../parsers/toml.hxx"
+#include "lib/server.hxx"
+#include "lib/utils/protocol.hxx"
+#include "lib/utils/schema.hxx"
+#include "parsers/json.hxx"
+#include "parsers/toml.hxx"
 
 using json = nlohmann::json;
 
@@ -199,9 +199,6 @@ walk_array_of_tables(const toml::table &root, const std::string &key,
 // INFO: Entry
 void lsp::server::LspServer::validate_toml(const std::string &uri,
                                            const std::string content) {
-  protocol::Protocol::progress_begin("p_diagnostics", "Diagnostics",
-                                     "Diagnosing Syntax");
-
   json diags = json::array();
   auto schema = mokai::schema::get_schema();
 
@@ -293,8 +290,6 @@ void lsp::server::LspServer::validate_toml(const std::string &uri,
     }
   }
 
-  protocol::Protocol::progress_report("p_diagnostics", "Diagnosing", 49);
-
   // array-of-tables: [[file_group]], [[property_group]], [[hook]]
   walk_array_of_tables(root, "file_group", schema, diags);
   walk_array_of_tables(root, "property_group", schema, diags);
@@ -304,6 +299,4 @@ void lsp::server::LspServer::validate_toml(const std::string &uri,
       {{"jsonrpc", "2.0"},
        {"method", "textDocument/publishDiagnostics"},
        {"params", {{"uri", uri}, {"diagnostics", diags}}}});
-
-  protocol::Protocol::progress_end("p_diagnostics", "Done Diagnosing");
 }

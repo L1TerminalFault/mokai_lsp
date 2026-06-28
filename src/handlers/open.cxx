@@ -1,6 +1,6 @@
-#include "../lib/server.hxx"
-#include "../lib/utils/protocol.hxx"
-#include "../parsers/json.hxx"
+#include "lib/server.hxx"
+#include "lib/utils/protocol.hxx"
+#include "parsers/json.hxx"
 
 using json = nlohmann::json;
 

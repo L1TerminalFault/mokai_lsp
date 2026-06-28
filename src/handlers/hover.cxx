@@ -1,7 +1,7 @@
-#include "../lib/server.hxx"
-#include "../lib/utils/protocol.hxx"
-#include "../lib/utils/schema.hxx"
-#include "../parsers/json.hxx"
+#include "lib/server.hxx"
+#include "lib/utils/protocol.hxx"
+#include "lib/utils/schema.hxx"
+#include "parsers/json.hxx"
 #include <sstream>
 
 using json = nlohmann::json;

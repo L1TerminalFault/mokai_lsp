@@ -1,7 +1,8 @@
-#include "../lib/server.hxx"
-#include "../lib/utils/protocol.hxx"
-#include "../lib/utils/schema.hxx"
-#include "../parsers/json.hxx"
+#include "lib/server.hxx"
+#include "lib/utils/protocol.hxx"
+#include "lib/utils/schema.hxx"
+#include "parsers/json.hxx"
+#include <string>
 
 using json = nlohmann::json;
 
@@ -159,13 +160,83 @@ static json make_field_item(const mokai::schema::FieldDef &f, int index) {
       {"documentation", f.description}};
 }
 
-static json make_value_item(const std::string &val, int index) {
+static bool cur_at_end(std::string line, int col) {
+  // End of line checker
+  std::string after = line.substr(col);
+  return after.find_first_not_of(" \t") == std::string::npos;
+  // return col >= (int)line.size();
+}
+
+static bool is_line_complete(const std::string &line, int col) {
+
+  size_t eq = line.find('=');
+  if (eq == std::string::npos)
+    return false;
+
+  std::string after_eq = line.substr(eq + 1);
+  // trim leading whitespace after =
+  size_t s = after_eq.find_first_not_of(" \t");
+  if (s == std::string::npos)
+    return false;
+
+  std::string val = after_eq.substr(s);
+
+  // complete quoted string: starts and ends with matching quote
+  if ((val.front() == '"' || val.front() == '\'') && val.size() >= 2) {
+    char q = val.front();
+    // find closing quote after the opening
+    size_t close = val.find(q, 1);
+    if (close != std::string::npos && (int)(eq + 1 + s + close) < col == false)
+      return true;
+  }
+
+  // complete boolean
+  if (val.rfind("true", 0) == 0 || val.rfind("false", 0) == 0)
+    return true;
+
+  // complete array: starts with [ and ends with ]
+  if (val.front() == '[' && val.back() == ']')
+    return true;
+
+  return false;
+}
+
+static json make_value_item(const std::string &val, int index,
+                            const std::string &cur_line, int cursor_col) {
   char sort[8];
   std::snprintf(sort, sizeof(sort), "%04d", index);
+
+  std::string before = cur_line.substr(0, cursor_col);
+  std::string after = cur_line.substr(cursor_col);
+
+  // detect opening quote type
+  char open_quote = 0;
+  for (int i = (int)before.size() - 1; i >= 0; --i) {
+    if (before[i] == '"' || before[i] == '\'') {
+      open_quote = before[i];
+      break;
+    }
+    if (before[i] == '=')
+      break; // hit = before finding a quote, no open quote
+  }
+
+  // detect if closing quote already exists after cursor
+  bool has_close = !after.empty() && (after[0] == '"' || after[0] == '\'');
+
+  std::string st = (open_quote == 0) ? "\"" : ""; // add opening if none
+  std::string end =
+      has_close ? "" : (open_quote ? std::string(1, open_quote) : "\"");
+
   return {{"label", val},
-          {"kind", 12}, // Value
-          {"insertText", "\"" + val + "\""},
+          {"kind", 13},
+          {"insertText", st + val + end},
+          {"filterText", val},
           {"sortText", std::string(sort)}};
+}
+
+static bool is_new_field_line(const std::string &line, int col) {
+  std::string before = line.substr(0, col);
+  return before.find_first_not_of(" \t") == std::string::npos;
 }
 
 // -----------------------------------------------------------------------
@@ -195,17 +266,24 @@ void lsp::server::LspServer::handle_completion(const nlohmann::json &msg) {
   if (is_value_context(cur_line, cursor_col)) {
     // --- Value completion ---
     std::string key = extract_key(cur_line);
+    // FIX: Checker if line is completed and cur at end to stop completion
+    // if (!is_line_complete(cur_line, cursor_line) && !cur_at_end(cur_line,
+    // cursor_col)
+
     if (def && !key.empty()) {
       for (const auto &f : def->fields) {
         if (f.key == key && !f.allowed_values.empty()) {
           int i = 0;
           for (const auto &val : f.allowed_values)
-            items.push_back(make_value_item(val, i++));
+            items.push_back(make_value_item(val, i++, cur_line, cursor_col));
           break;
         }
       }
     }
   } else {
+    // FIX: Checker for new lines for completion
+    // if (is_new_field_line(cur_line, cursor_line))
+
     // --- Key completion ---
     if (def) {
       // suggest fields from the matched schema table

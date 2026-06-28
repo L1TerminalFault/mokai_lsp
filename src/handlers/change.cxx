@@ -1,5 +1,5 @@
-#include "../lib/server.hxx"
-#include "../parsers/json.hxx"
+#include "lib/server.hxx"
+#include "parsers/json.hxx"
 
 using json = nlohmann::json;
 

@@ -37,10 +37,6 @@ struct Protocol {
     if (content_length == 0)
       return false;
 
-    // std::vector<char> buffer(content_length);
-    // std::cin.read(buffer.data(), content_length);
-    // out_body.assign(buffer.begin(), buffer.end());
-
     out_body.resize(content_length);
     std::cin.read(out_body.data(), content_length);
 
