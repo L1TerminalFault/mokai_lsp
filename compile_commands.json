@@ -1,0 +1,57 @@
+[
+  {
+    "directory": "/home/k/mokai_lsp",
+    "command": "g++ -std=c++23 -O3 -fPIC -I/home/k/mokai_lsp/src -c \"/home/k/mokai_lsp/src/handlers/change.cxx\"",
+    "file": "/home/k/mokai_lsp/src/handlers/change.cxx"
+  },
+  {
+    "directory": "/home/k/mokai_lsp",
+    "command": "g++ -std=c++23 -O3 -fPIC -I/home/k/mokai_lsp/src -c \"/home/k/mokai_lsp/src/handlers/completion.cxx\"",
+    "file": "/home/k/mokai_lsp/src/handlers/completion.cxx"
+  },
+  {
+    "directory": "/home/k/mokai_lsp",
+    "command": "g++ -std=c++23 -O3 -fPIC -I/home/k/mokai_lsp/src -c \"/home/k/mokai_lsp/src/handlers/diagnostics.cxx\"",
+    "file": "/home/k/mokai_lsp/src/handlers/diagnostics.cxx"
+  },
+  {
+    "directory": "/home/k/mokai_lsp",
+    "command": "g++ -std=c++23 -O3 -fPIC -I/home/k/mokai_lsp/src -c \"/home/k/mokai_lsp/src/handlers/format.cxx\"",
+    "file": "/home/k/mokai_lsp/src/handlers/format.cxx"
+  },
+  {
+    "directory": "/home/k/mokai_lsp",
+    "command": "g++ -std=c++23 -O3 -fPIC -I/home/k/mokai_lsp/src -c \"/home/k/mokai_lsp/src/handlers/hover.cxx\"",
+    "file": "/home/k/mokai_lsp/src/handlers/hover.cxx"
+  },
+  {
+    "directory": "/home/k/mokai_lsp",
+    "command": "g++ -std=c++23 -O3 -fPIC -I/home/k/mokai_lsp/src -c \"/home/k/mokai_lsp/src/handlers/impl.cxx\"",
+    "file": "/home/k/mokai_lsp/src/handlers/impl.cxx"
+  },
+  {
+    "directory": "/home/k/mokai_lsp",
+    "command": "g++ -std=c++23 -O3 -fPIC -I/home/k/mokai_lsp/src -c \"/home/k/mokai_lsp/src/handlers/initialize.cxx\"",
+    "file": "/home/k/mokai_lsp/src/handlers/initialize.cxx"
+  },
+  {
+    "directory": "/home/k/mokai_lsp",
+    "command": "g++ -std=c++23 -O3 -fPIC -I/home/k/mokai_lsp/src -c \"/home/k/mokai_lsp/src/handlers/open.cxx\"",
+    "file": "/home/k/mokai_lsp/src/handlers/open.cxx"
+  },
+  {
+    "directory": "/home/k/mokai_lsp",
+    "command": "g++ -std=c++23 -O3 -fPIC -I/home/k/mokai_lsp/src -c \"/home/k/mokai_lsp/src/handlers/save.cxx\"",
+    "file": "/home/k/mokai_lsp/src/handlers/save.cxx"
+  },
+  {
+    "directory": "/home/k/mokai_lsp",
+    "command": "g++ -std=c++23 -O3 -fPIC -I/home/k/mokai_lsp/src -c \"/home/k/mokai_lsp/src/init.cxx\"",
+    "file": "/home/k/mokai_lsp/src/init.cxx"
+  },
+  {
+    "directory": "/home/k/mokai_lsp",
+    "command": "g++ -std=c++23 -O3 -fPIC -I/home/k/mokai_lsp/src -c \"/home/k/mokai_lsp/src/lib/server.cxx\"",
+    "file": "/home/k/mokai_lsp/src/lib/server.cxx"
+  }
+]

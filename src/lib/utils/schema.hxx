@@ -1,226 +1,243 @@
 #pragma once
 
 #include <string>
+#include <string_view>
 #include <vector>
 
 namespace mokai::schema {
 
-enum class FieldType {
-  String,
-  Bool,
-  Array,
-  Table,
-  ArrayOfTables,
-};
+enum class FieldType { String, Bool, Array, Table, ArrayOfTables };
 
 struct FieldDef {
   std::string key;
   FieldType type;
   bool required = false;
   std::string description;
-  std::vector<std::string> allowed_values; // empty = any value ok
+  std::vector<std::string> allowed_values;
 };
 
 struct TableDef {
-  std::string path; // e.g. "project", "target.*", "target.*.sources_if"
+  std::string path;
   std::vector<FieldDef> fields;
   std::string description;
 };
 
-// INFO: Completely constructed by an agent (let's be real who the F#CK deals
-// with this)
-
 inline std::vector<TableDef> get_schema() {
   return {
       {"project",
-       {
-           {"name", FieldType::String, true,
-            "Unique string token identifying the package."},
-           {"version", FieldType::String, false,
-            "Baseline version fallback literal."},
-           {"license", FieldType::String, false, "License metadata."},
-           {"description", FieldType::String, false, "Project description."},
-           {"homepage", FieldType::String, false, "Homepage URL."},
-           {"cpp_version",
-            FieldType::String,
-            false,
-            "C++ standard version.",
-            {"c++11", "c++14", "c++17", "c++20", "c++23", "c++26"}},
-           {"default_compiler", FieldType::String, false,
-            "Default selected compiler"},
-           {"version_from", FieldType::Table, false,
-            "Dynamic versioning rule: { file, pattern }."},
-           {"authors", FieldType::Array, false, "List of author names."},
-           {"include_dirs", FieldType::Array, false,
-            "Global include paths appended to all targets."},
-           {"dependencies", FieldType::Array, false,
-            "Local (`./`) or remote (`git:`) dependencies."},
-       },
-       "Root project manifest block."},
-      {"options",
-       {
-           // options keys are user-defined booleans — validated dynamically
-       },
-       "Project-level boolean option toggles. All values must be booleans."},
+       {{"name", FieldType::String, true, "Unique identifier package token."},
+        {"version", FieldType::String, false,
+         "Fallback project version literal."},
+        {"license", FieldType::String, false,
+         "SPDX license metadata identifier."},
+        {"description", FieldType::String, false,
+         "Detailed package overview text."},
+        {"homepage", FieldType::String, false, "Project website landing URL."},
+        {"cpp_version",
+         FieldType::String,
+         false,
+         "C++ standard baseline dialect.",
+         {"c++11", "c++14", "c++17", "c++20", "c++23", "c++26"}},
+        {"default_compiler",
+         FieldType::String,
+         false,
+         "Fallback system toolchain driver select.",
+         {"g++", "clang++", "msvc"}},
+        {"version_from", FieldType::Table, false,
+         "Dynamic rule regex file tracker layout: { file, pattern }."},
+        {"authors", FieldType::Array, false, "List of project author strings."},
+        {"include_dirs", FieldType::Array, false,
+         "Global include paths appended downstream."},
+        {"dependencies", FieldType::Array, false,
+         "Package array upstream requirements declarations."}},
+       "Root package matrix."},
+      {"options", {}, "User option flag toggles validation map."},
       {"compatibility",
-       {
-           {"min_cpp_version",
-            FieldType::String,
-            false,
-            "Minimum required C++ version.",
-            {"c++11", "c++14", "c++17", "c++20", "c++23", "c++26"}},
-           {"preferred_cpp_version",
-            FieldType::String,
-            false,
-            "Preferred C++ version.",
-            {"c++11", "c++14", "c++17", "c++20", "c++23", "c++26"}},
-           {"unsupported_cpp_versions", FieldType::Array, false,
-            "List of unsupported C++ versions."},
-       },
-       "Compatibility gating matrix."},
+       {{"min_cpp_version",
+         FieldType::String,
+         false,
+         "Minimum toolchain standard barrier.",
+         {"c++11", "c++14", "c++17", "c++20", "c++23", "c++26"}},
+        {"preferred_cpp_version",
+         FieldType::String,
+         false,
+         "Target standard runtime optimization.",
+         {"c++11", "c++14", "c++17", "c++20", "c++23", "c++26"}},
+        {"unsupported_cpp_versions", FieldType::Array, false,
+         "Blacklisted compiler standards list."}},
+       "Toolchain constraints engine validation arrays."},
       {"compatibility.compilers",
-       {
-           {"supported",
-            FieldType::Array,
-            false,
-            "Supported compilers.",
-            {"clang", "gcc", "msvc"}},
-           {"unsupported",
-            FieldType::Array,
-            false,
-            "Unsupported compilers.",
-            {"clang", "gcc", "msvc"}},
-       },
-       "Compiler compatibility constraints."},
-      {"file_group", // array of tables
-       {
-           {"name", FieldType::String, true,
-            "Logical name for this file group."},
-           {"patterns", FieldType::Array, true,
-            "Glob patterns for source files."},
-       },
-       "Logical file group alias (array of tables)."},
+       {{"supported",
+         FieldType::Array,
+         false,
+         "Allowed host systems toolchains list.",
+         {"g++", "clang++", "msvc"}},
+        {"unsupported",
+         FieldType::Array,
+         false,
+         "Banned host systems toolchains list.",
+         {"g++", "clang++", "msvc"}}},
+       "Compiler validation checks layout."},
+      {"file_group",
+       {{"name", FieldType::String, true,
+         "Logical reference alias identifier."},
+        {"patterns", FieldType::Array, true,
+         "File system glob strings arrays lookup matching."}},
+       "File system asset clusters arrays descriptors."},
       {"property_group",
-       {
-           {"name", FieldType::String, true,
-            "Name used to reference via '@' prefix."},
-           {"condition", FieldType::String, false,
-            "Condition expression for activation."},
-           {"defines", FieldType::Array, false, "Preprocessor defines."},
-           {"flags", FieldType::Array, false, "Compiler flags."},
-       },
-       "Reusable property group referenced in targets."},
+       {{"name", FieldType::String, true,
+         "Reference identification array string token."},
+        {"condition", FieldType::String, false,
+         "Conditional logic block matching engine string."},
+        {"defines", FieldType::Array, false,
+         "Preprocessor macro definitions arrays injections."},
+        {"flags", FieldType::Array, false,
+         "Hardcoded tool parameter modifications arrays lists."}},
+       "Shared compile parameters target configurations profiles."},
       {"hook",
-       {
-           {"name", FieldType::String, true, "Hook identifier name."},
-           {"on",
-            FieldType::String,
-            true,
-            "Lifecycle trigger event.",
-            {"pre_build", "post_build", "pre_target_build", "post_target_build",
-             "file_change"}},
-           {"run", FieldType::String, true, "Shell command to execute."},
-           {"target", FieldType::String, false,
-            "Restrict hook to a single target."},
-           {"pattern", FieldType::String, false,
-            "Glob pattern for file_change tracking."},
-       },
-       "Lifecycle interceptor hook."},
+       {{"name", FieldType::String, true,
+         "Callback identity tracking key label."},
+        {"on",
+         FieldType::String,
+         true,
+         "Pipeline interception execution state trigger step.",
+         {"pre_build", "post_build", "pre_target_build", "post_target_build",
+          "file_change"}},
+        {"run", FieldType::String, true,
+         "Shell executable string statement invocation text."},
+        {"target", FieldType::String, false,
+         "Target scope isolation filter match string."},
+        {"pattern", FieldType::String, false,
+         "Monitored watch file system glob string matches."}},
+       "Lifecycle pipeline automation state triggers block."},
       {"target.*",
-       {
-           {"type",
-            FieldType::String,
-            true,
-            "Target output type.",
-            {"executable", "static_library", "shared_library"}},
-           {"sources", FieldType::Array, false, "Static source file list."},
-           {"include_dirs", FieldType::Array, false,
-            "Target-scoped include paths."},
-           {"properties", FieldType::Array, false,
-            "Property group references (use '@name')."},
-           {"flags", FieldType::Array, false, "Hardcoded compiler flags."},
-           {"system_libs", FieldType::Array, false,
-            "System libraries to link."},
-           {"depends_on", FieldType::Array, false,
-            "Target or package dependencies."},
-       },
-       "Compilation target definition."},
+       {{"type",
+         FieldType::String,
+         true,
+         "Output compilation artifact binary layer layout format.",
+         {"executable", "static_library", "shared_library"}},
+        {"sources", FieldType::Array, false,
+         "Explicit file lists mapping parameters targets."},
+        {"include_dirs", FieldType::Array, false,
+         "Isolated search paths directories mapping parameters."},
+        {"properties", FieldType::Array, false,
+         "Profile link array identifier tokens (@name lookup)."},
+        {"flags",
+         FieldType::Array,
+         false,
+         "Hardcoded compiler parameters optimizations levels modifiers lists.",
+         {"-O0", "-O1", "-O2", "-O3", "-Os", "-Og", "-g"}},
+        {"system_libs", FieldType::Array, false,
+         "Linker framework external binary system libraries link strings."},
+        {"depends_on", FieldType::Array, false,
+         "Internal task nodes DAG topology dependencies array map link "
+         "references."}},
+       "Compilation units build generation layout attributes."},
       {"target.*.sources_if",
-       {
-           {"condition", FieldType::String, true, "Condition expression."},
-           {"patterns", FieldType::Array, true,
-            "Glob patterns for conditional sources."},
-       },
-       "Conditional source file modifier."},
+       {{"condition", FieldType::String, true,
+         "Evaluation condition expression script verification statement."},
+        {"patterns", FieldType::Array, true,
+         "Conditional dynamic layout file system source globs match targets."}},
+       "Conditional asset matching layout modifiers rules."},
       {"target.*.flags_if",
-       {
-           {"condition", FieldType::String, true, "Condition expression."},
-           {"flags", FieldType::Array, true, "Conditional compiler flags."},
-       },
-       "Conditional flags modifier."},
+       {{"condition", FieldType::String, true,
+         "Evaluation condition expression script verification statement."},
+        {"flags", FieldType::Array, true,
+         "Conditional tool optimization parameter flags definitions arrays "
+         "strings."}},
+       "Conditional parameters optimization levels rules attributes "
+       "modifiers."},
       {"target.*.properties_if",
-       {
-           {"condition", FieldType::String, false, "Condition expression."},
-           {"defines", FieldType::Array, false, "Conditional defines."},
-           {"depends_on", FieldType::Array, false, "Conditional dependencies."},
-       },
-       "Conditional properties modifier."},
+       {{"condition", FieldType::String, false,
+         "Evaluation condition expression script verification statement."},
+        {"defines", FieldType::Array, false,
+         "Conditional micro symbol preprocessor injections arrays attributes."},
+        {"depends_on", FieldType::Array, false,
+         "Conditional topology dependencies graphs arrays structures "
+         "references."}},
+       "Conditional profile attribute fields mapping rules modifiers "
+       "configurations."},
       {"exports",
-       {
-           {"default_targets", FieldType::Array, true,
-            "Targets linked by default on package match."},
-           {"include_dirs", FieldType::Array, false,
-            "Public include directories."},
-           {"defines_required", FieldType::Array, false,
-            "Defines consumers must set."},
-           {"defines_optional", FieldType::Array, false,
-            "Defines consumers may set."},
-       },
-       "Interface distribution layer for downstream consumers."},
+       {{"default_targets", FieldType::Array, true,
+         "Default visible artifact build pipeline links target mappings "
+         "strings."},
+        {"include_dirs", FieldType::Array, false,
+         "Public include distributions interface paths rules lookup roots."},
+        {"defines_required", FieldType::Array, false,
+         "Downstream mandatory validation macro tracking markers injections."},
+        {"defines_optional", FieldType::Array, false,
+         "Downstream interface generic macro definitions parameter "
+         "configurations arrays."}},
+       "Public downstream API packaging integration rules distribution "
+       "definitions bindings."},
       {"exports.profile.*",
-       {
-           {"targets", FieldType::Array, true,
-            "Targets included in this export profile."},
-       },
-       "Named export profile cluster."},
+       {{"targets", FieldType::Array, true,
+         "Profile scope specific packaging visibility array paths target "
+         "links."}},
+       "Export package grouping profile target clusters mappings layout "
+       "rules."},
       {"output",
-       {
-           {"directory", FieldType::String, false, "Base output directory."},
-       },
-       "Artifact generation layout."},
+       {{"directory", FieldType::String, false,
+         "Root build compilation output artifact directory workspace file "
+         "root."}},
+       "Compilation generation system storage path layouts options."},
       {"output.configs.*",
-       {
-           {"enabled", FieldType::Bool, false,
-            "Whether this config is active."},
-           {"subdir", FieldType::String, false,
-            "Subdirectory for this config's output."},
-       },
-       "Per-config output settings (debug, release, etc)."},
-  };
+       {{"enabled", FieldType::Bool, false,
+         "Variant status selection condition execution tracking toggle "
+         "parameter."},
+        {"subdir", FieldType::String, false,
+         "Output target variant compilation directory workspace subdirectory "
+         "mapping configuration text."}},
+       "Compilation mode variants subdirectories layout configurations options "
+       "mapping variables declarations."},
+      {"dependencies",
+       {},
+       "External package resolution trees layout parameters settings tracking "
+       "blocks."},
+      {"build",
+       {{"parallel_jobs", FieldType::String, false,
+         "Thread limit execution constraint counts configurations."},
+        {"generator",
+         FieldType::String,
+         false,
+         "Target compilation tool generation engine choice selection.",
+         {"ninja", "make", "internal"}},
+        {"verbose", FieldType::Bool, false,
+         "Pipeline standard output telemetry string verbosity flags state "
+         "parameter."}},
+       "Custom pipeline build environment runtime optimization settings "
+       "attributes engine configurations."},
+      {"env",
+       {},
+       "Local execution platform environment key override assignments mappings "
+       "definitions."},
+      {"test",
+       {{"command", FieldType::String, true,
+         "Test framework shell execution runner text string."},
+        {"timeout", FieldType::String, false,
+         "Maximum execution loop safety time barrier limits configuration."},
+        {"targets", FieldType::Array, false,
+         "Scope validation specific test suite execution target dependencies "
+         "lists structures."}},
+       "Integrated test validation block specifications automation matrix "
+       "options mapping configurations definitions."}};
 }
 
-// Lookup a TableDef by exact path or wildcard match (e.g.
-// "target.my_engine_core" -> "target.*")
 inline const TableDef *find_table(const std::vector<TableDef> &schema,
-                                  const std::string &path) {
-  // exact match first
+                                  std::string_view path) {
   for (const auto &t : schema)
     if (t.path == path)
       return &t;
-
-  // wildcard match: replace last segment with *
-  auto dot = path.rfind('.');
-  if (dot != std::string::npos) {
-    std::string wildcard = path.substr(0, dot) + ".*";
+  size_t dot = path.rfind('.');
+  if (dot != std::string_view::npos) {
+    std::string w1 = std::string(path.substr(0, dot)) + ".*";
     for (const auto &t : schema)
-      if (t.path == wildcard)
+      if (t.path == w1)
         return &t;
-
-    // two-level wildcard e.g. target.my_engine_core.sources_if ->
-    // target.*.sources_if
-    auto dot2 = path.substr(0, dot).rfind('.');
-    if (dot2 != std::string::npos) {
-      std::string w2 = path.substr(0, dot2) + ".*." + path.substr(dot + 1);
+    size_t dot2 = path.substr(0, dot).rfind('.');
+    if (dot2 != std::string_view::npos) {
+      std::string w2 = std::string(path.substr(0, dot2)) + ".*." +
+                       std::string(path.substr(dot + 1));
       for (const auto &t : schema)
         if (t.path == w2)
           return &t;

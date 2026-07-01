@@ -1,6 +1,7 @@
 [project]
 name = "mokai_lsp"
 cpp_version = "c++23"
+default_compiler = "gcc"
 
 [target.mokai_lsp]
 type = "executable"
